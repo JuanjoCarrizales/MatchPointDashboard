@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.MatchPointDashboard" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <item name="colorPrimary">#bde813</item>
+    <item name="colorPrimaryDark">#1a1a1a</item>
+    <item name="colorAccent">#bde813</item>
+    <item name="android:windowBackground">#1a1a1a</item>
+    </style>
+
+</resources>
