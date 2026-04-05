@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.mypadelapp.matchpointdashboard.R
 import com.mypadelapp.matchpointdashboard.firebase.FirebaseManager
-import com.mypadelapp.matchpointdashboard.home.HomeActivity
+import com.mypadelapp.matchpointdashboard.estadisticas.EstadisticasActivity
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -39,7 +39,7 @@ class RegisterActivity : AppCompatActivity() {
                 else -> {
                     FirebaseManager.registrar(email, password,
                         onExito = {
-                            startActivity(Intent(this, HomeActivity::class.java))
+                            startActivity(Intent(this, EstadisticasActivity::class.java))
                             finish()
                         },
                         onError = { txtError.text = it }

@@ -11,6 +11,49 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <!-- Cabecera con saludo y cerrar sesión -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtSaludo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hola, jugador"
+                    android:textColor="#1a1a1a"
+                    android:textSize="22sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/txtEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="#aaaaaa"
+                    android:textSize="13sp"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtLogout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cerrar sesión"
+                android:textColor="#E74C3C"
+                android:textSize="13sp"
+                android:padding="8dp"/>
+
+        </LinearLayout>
+
         <!-- Tarjeta: Partidos Ganados/Perdidos -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"

@@ -11,7 +11,7 @@ import com.mypadelapp.matchpointdashboard.historial.HistorialActivity
 import com.mypadelapp.matchpointdashboard.login.LoginActivity
 import com.mypadelapp.matchpointdashboard.estadisticas.EstadisticasActivity
 
-class HomeActivity : AppCompatActivity() {
+/*class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,4 +42,4 @@ class HomeActivity : AppCompatActivity() {
             finish()
         }
     }
-}
+}*/

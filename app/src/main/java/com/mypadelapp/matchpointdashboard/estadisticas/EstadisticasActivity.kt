@@ -44,39 +44,40 @@ class EstadisticasActivity : AppCompatActivity() {
         Configuration.getInstance().userAgentValue = packageName
         setContentView(R.layout.activity_estadisticas)
 
+        inicializarVistas()
+        cargarTodo()
+    }
+
+    private fun inicializarVistas() {
         val txtSaludo = findViewById<TextView>(R.id.txtSaludo)
         val txtEmail = findViewById<TextView>(R.id.txtEmail)
+        val txtLogout = findViewById<TextView>(R.id.txtLogout)
+
         // Mostramos el correo del usuario logueado:
         FirebaseManager.usuarioActual?.let {
             txtEmail.text = it.email
         }
 
-        inicializarVistas()
-        cargarTodo()
+        pieChart = findViewById(R.id.pieChart)
+        txtGanados = findViewById(R.id.txtGanados)
+        txtPerdidos = findViewById(R.id.txtPerdidos)
+        barraGanados = findViewById(R.id.barraGanados)
+        barraPerdidos = findViewById(R.id.barraPerdidos)
+        txtSets = findViewById(R.id.txtSets)
+        txtDuracionMedia = findViewById(R.id.txtDuracionMedia)
+        txtMediaPunto = findViewById(R.id.txtMediaPunto)
+        listaPartidos = findViewById(R.id.listaPartidos)
+        chartDias = findViewById(R.id.chartDias)
+        chartMeses = findViewById(R.id.chartMeses)
+        mapa = findViewById(R.id.mapa)
 
-        val txtLogout = findViewById<TextView>(R.id.txtLogout)
+        configurarMapa()
+
         txtLogout.setOnClickListener {
             FirebaseManager.logout()
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
-    }
-
-    private fun inicializarVistas() {
-        pieChart        = findViewById(R.id.pieChart)
-        txtGanados      = findViewById(R.id.txtGanados)
-        txtPerdidos     = findViewById(R.id.txtPerdidos)
-        barraGanados    = findViewById(R.id.barraGanados)
-        barraPerdidos   = findViewById(R.id.barraPerdidos)
-        txtSets         = findViewById(R.id.txtSets)
-        txtDuracionMedia = findViewById(R.id.txtDuracionMedia)
-        txtMediaPunto   = findViewById(R.id.txtMediaPunto)
-        listaPartidos   = findViewById(R.id.listaPartidos)
-        chartDias       = findViewById(R.id.chartDias)
-        chartMeses      = findViewById(R.id.chartMeses)
-        mapa            = findViewById(R.id.mapa)
-
-        configurarMapa()
     }
 
     private fun cargarTodo() {
@@ -90,7 +91,7 @@ class EstadisticasActivity : AppCompatActivity() {
         cargarUbicaciones()
     }
 
-    // ─── Partidos ganados/perdidos ────────────────────────────
+    //Partidos ganados/perdidos:
     private fun cargarPartidosGanadosPerdidos() {
         FirebaseManager.getPartidosGanadosYPerdidos { ganados, perdidos ->
             runOnUiThread {
@@ -103,7 +104,7 @@ class EstadisticasActivity : AppCompatActivity() {
                 barraGanados.progress  = pctGanados
                 barraPerdidos.progress = pctPerdidos
 
-                // Gráfico donut:
+                //Gráfico en forma de donut:
                 val entries = listOf(
                     PieEntry(ganados.toFloat(), ""),
                     PieEntry(perdidos.toFloat(), "")
@@ -128,14 +129,14 @@ class EstadisticasActivity : AppCompatActivity() {
         }
     }
 
-    // ─── Sets ─────────────────────────────────────────────────
+    //Sets:
     private fun cargarSets() {
         FirebaseManager.getSetsGanadosYPerdidos { ganados, perdidos ->
             runOnUiThread { txtSets.text = "$ganados / $perdidos" }
         }
     }
 
-    // ─── Duración media partido ───────────────────────────────
+    //Duración media de partido:
     private fun cargarDuracionMedia() {
         FirebaseManager.getDuracionMediaPartido { duracion ->
             runOnUiThread {
@@ -146,7 +147,7 @@ class EstadisticasActivity : AppCompatActivity() {
         }
     }
 
-    // ─── Media por punto ──────────────────────────────────────
+    //Media por punto:
     private fun cargarMediaPunto() {
         FirebaseManager.getDuracionMediaPunto { seg ->
             runOnUiThread {
@@ -155,7 +156,7 @@ class EstadisticasActivity : AppCompatActivity() {
         }
     }
 
-    // ─── Últimos partidos ─────────────────────────────────────
+    //Últimos partidos jugados:
     private fun cargarUltimosPartidos() {
         val uid = FirebaseManager.auth.currentUser?.uid ?: return
         FirebaseManager.db.collection("usuarios").document(uid)
@@ -184,14 +185,14 @@ class EstadisticasActivity : AppCompatActivity() {
             gravity = Gravity.CENTER_VERTICAL
         }
 
-        // Icono victoria/derrota:
+        //Icono victoria/derrota:
         val icono = TextView(this).apply {
             text = if (resultado == "Victoria") "🏆" else "❌"
             textSize = 24f
             layoutParams = LinearLayout.LayoutParams(48, 48)
         }
 
-        // Info del partido:
+        //Información del partido:
         val info = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
@@ -213,7 +214,7 @@ class EstadisticasActivity : AppCompatActivity() {
         info.addView(txtSetsPartido)
         info.addView(txtFechaPartido)
 
-        // Badge victoria/derrota:
+        //Badge victoria/derrota:
         val badge = TextView(this).apply {
             text = resultado
             textSize = 12f
@@ -229,7 +230,7 @@ class EstadisticasActivity : AppCompatActivity() {
         listaPartidos.addView(fila)
     }
 
-    // ─── Partidos por día ─────────────────────────────────────
+    //Partidos por día:
     private fun cargarPartidosPorDia() {
         FirebaseManager.getPartidosPorDia { diasMap ->
             runOnUiThread {
@@ -242,7 +243,7 @@ class EstadisticasActivity : AppCompatActivity() {
         }
     }
 
-    // ─── Partidos por mes ─────────────────────────────────────
+    //Partidos por mes:
     private fun cargarPartidosPorMes() {
         FirebaseManager.getPartidosPorMes { mesesMap ->
             runOnUiThread {
@@ -281,7 +282,7 @@ class EstadisticasActivity : AppCompatActivity() {
         }
     }
 
-    // ─── Mapa ─────────────────────────────────────────────────
+    //Mapa:
     private fun configurarMapa() {
         mapa.apply {
             setTileSource(TileSourceFactory.MAPNIK)

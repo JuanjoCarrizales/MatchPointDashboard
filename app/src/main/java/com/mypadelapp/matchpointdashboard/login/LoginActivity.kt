@@ -14,7 +14,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //Si el usuario está logueado, ir a "home":
+        //Si el usuario está logueado, ir a "estadísticas":
         if(FirebaseManager.logueado) {
             estadisticas()
             return
