@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -21,14 +22,15 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
+import com.mypadelapp.matchpointdashboard.firebase.DataGenerator
 
 class EstadisticasActivity : AppCompatActivity() {
 
     private lateinit var pieChart: PieChart
-    private lateinit var txtGanados: TextView
-    private lateinit var txtPerdidos: TextView
-    private lateinit var barraGanados: ProgressBar
-    private lateinit var barraPerdidos: ProgressBar
+    private lateinit var txtVictorias: TextView
+    private lateinit var txtDerrotas: TextView
+    private lateinit var barraVictorias: ProgressBar
+    private lateinit var barraDerrotas: ProgressBar
     private lateinit var txtSets: TextView
     private lateinit var txtDuracionMedia: TextView
     private lateinit var txtMediaPunto: TextView
@@ -49,20 +51,38 @@ class EstadisticasActivity : AppCompatActivity() {
     }
 
     private fun inicializarVistas() {
-        val txtSaludo = findViewById<TextView>(R.id.txtSaludo)
-        val txtEmail = findViewById<TextView>(R.id.txtEmail)
         val txtLogout = findViewById<TextView>(R.id.txtLogout)
+        val txtNombre = findViewById<TextView>(R.id.txtNombre)
 
         // Mostramos el correo del usuario logueado:
-        FirebaseManager.usuarioActual?.let {
-            txtEmail.text = it.email
+        FirebaseManager.usuarioActual?.let { user ->
+            FirebaseManager.db.collection("usuarios").document(user.uid).get()
+                .addOnSuccessListener { doc ->
+                    val nombre = doc.getString("nombre") ?: ""
+                    val apellido = doc.getString("apellido") ?: ""
+                    txtNombre.text = "$nombre $apellido"
+                }
+
+        }
+
+        // Botón temporal para generar datos (bórralo después!!!!!!!!!!!!!!!!!!!!!!!!):
+        val btnGenerar = findViewById<Button>(R.id.btnGenerar)
+        btnGenerar.setOnClickListener {
+            btnGenerar.isEnabled = false
+            btnGenerar.text = "Generando..."
+            DataGenerator.generarPartidos {
+                runOnUiThread {
+                    btnGenerar.text = "✅ Datos generados"
+                    Toast.makeText(this, "20 partidos subidos!", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
         pieChart = findViewById(R.id.pieChart)
-        txtGanados = findViewById(R.id.txtGanados)
-        txtPerdidos = findViewById(R.id.txtPerdidos)
-        barraGanados = findViewById(R.id.barraGanados)
-        barraPerdidos = findViewById(R.id.barraPerdidos)
+        txtVictorias = findViewById(R.id.txtVictorias)
+        txtDerrotas = findViewById(R.id.txtDerrotas)
+        barraVictorias = findViewById(R.id.barraVictorias)
+        barraDerrotas = findViewById(R.id.barraDerrotas)
         txtSets = findViewById(R.id.txtSets)
         txtDuracionMedia = findViewById(R.id.txtDuracionMedia)
         txtMediaPunto = findViewById(R.id.txtMediaPunto)
@@ -81,7 +101,7 @@ class EstadisticasActivity : AppCompatActivity() {
     }
 
     private fun cargarTodo() {
-        cargarPartidosGanadosPerdidos()
+        cargarVictoriasDerrotas()
         cargarSets()
         cargarDuracionMedia()
         cargarMediaPunto()
@@ -92,17 +112,17 @@ class EstadisticasActivity : AppCompatActivity() {
     }
 
     //Partidos ganados/perdidos:
-    private fun cargarPartidosGanadosPerdidos() {
-        FirebaseManager.getPartidosGanadosYPerdidos { ganados, perdidos ->
+    private fun cargarVictoriasDerrotas() {
+        FirebaseManager.getPartidosGanadosYPerdidos {ganados, perdidos ->
             runOnUiThread {
                 val total = ganados + perdidos
                 val pctGanados  = if (total > 0) (ganados * 100 / total) else 0
                 val pctPerdidos = if (total > 0) (perdidos * 100 / total) else 0
 
-                txtGanados.text  = "$ganados ($pctGanados%)"
-                txtPerdidos.text = "$perdidos ($pctPerdidos%)"
-                barraGanados.progress  = pctGanados
-                barraPerdidos.progress = pctPerdidos
+                txtVictorias.text  = "$ganados ($pctGanados%)"
+                txtDerrotas.text = "$perdidos ($pctPerdidos%)"
+                barraVictorias.progress  = pctGanados
+                barraDerrotas.progress = pctPerdidos
 
                 //Gráfico en forma de donut:
                 val entries = listOf(
@@ -131,25 +151,25 @@ class EstadisticasActivity : AppCompatActivity() {
 
     //Sets:
     private fun cargarSets() {
-        FirebaseManager.getSetsGanadosYPerdidos { ganados, perdidos ->
-            runOnUiThread { txtSets.text = "$ganados / $perdidos" }
+        FirebaseManager.getSetsGanadosYPerdidos {ganados, perdidos ->
+            runOnUiThread {txtSets.text = "$ganados / $perdidos"}
         }
     }
 
     //Duración media de partido:
     private fun cargarDuracionMedia() {
-        FirebaseManager.getDuracionMediaPartido { duracion ->
+        FirebaseManager.getDuracionMediaPartido {duracion ->
             runOnUiThread {
                 val min = duracion / 60
                 val seg = duracion % 60
-                txtDuracionMedia.text = if (duracion > 0) "%02d:%02d".format(min, seg) else "—"
+                txtDuracionMedia.text = if (duracion > 0) "${"%02d:%02d".format(min, seg)}min" else "—"
             }
         }
     }
 
     //Media por punto:
     private fun cargarMediaPunto() {
-        FirebaseManager.getDuracionMediaPunto { seg ->
+        FirebaseManager.getDuracionMediaPunto {seg ->
             runOnUiThread {
                 txtMediaPunto.text = if (seg > 0) "${seg}s" else "—"
             }
@@ -164,73 +184,38 @@ class EstadisticasActivity : AppCompatActivity() {
             .orderBy("fecha_inicio", com.google.firebase.firestore.Query.Direction.DESCENDING)
             .limit(5)
             .get()
-            .addOnSuccessListener { partidos ->
+            .addOnSuccessListener {partidos ->
                 for (partido in partidos) {
-                    FirebaseManager.getResumenPartido(partido.id) { fecha, resultado, sets ->
+                    FirebaseManager.getResumenPartido(partido.id) {fecha, resultado, sets ->
                         runOnUiThread {
-                            añadirFilaPartido(fecha, resultado, sets)
+                            aFilaPartido(fecha, resultado, sets)
                         }
                     }
                 }
             }
     }
 
-    private fun añadirFilaPartido(fecha: String, resultado: String, sets: List<String>) {
-        val fila = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            layoutParams = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            ).apply { setMargins(0, 0, 0, 12) }
-            gravity = Gravity.CENTER_VERTICAL
-        }
+    private fun aFilaPartido(fecha: String, resultado: String, sets: List<String>) {
+        val fila = layoutInflater.inflate(R.layout.icono_victoria_derrota, listaPartidos, false)
 
-        //Icono victoria/derrota:
-        val icono = TextView(this).apply {
-            text = if (resultado == "Victoria") "🏆" else "❌"
-            textSize = 24f
-            layoutParams = LinearLayout.LayoutParams(48, 48)
-        }
+        val txtIcono = fila.findViewById<TextView>(R.id.txtIcono)
+        val txtSetsPartido = fila.findViewById<TextView>(R.id.txtSetsPartido)
+        val txtFechaPartido = fila.findViewById<TextView>(R.id.txtFechaPartido)
+        val txtBadge = fila.findViewById<TextView>(R.id.txtBadge)
+        val Victoria = resultado == "Victoria"
 
-        //Información del partido:
-        val info = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
-                .apply { setMargins(12, 0, 0, 0) }
-        }
+        txtIcono.text = if (Victoria) "\uD83C\uDFC6" else "\uD83D\uDE13"
+        txtSetsPartido.text = if (sets.isNotEmpty()) sets.joinToString(", ") else "Sin sets"
+        txtFechaPartido.text = fecha.take(10)
 
-        val txtSetsPartido = TextView(this).apply {
-            text = sets.joinToString(", ")
-            textSize = 14f
-            setTextColor(Color.parseColor("#1a1a1a"))
-        }
+        txtBadge.text = resultado
+        txtBadge.setTextColor(Color.parseColor(if (Victoria) "#2ECC71" else "#E74C3C"))
+        txtBadge.setBackgroundResource(if (Victoria) R.drawable.badge_victoria else R.drawable.badge_derrota)
 
-        val txtFechaPartido = TextView(this).apply {
-            text = fecha.take(10) // Solo la fecha sin hora
-            textSize = 11f
-            setTextColor(Color.parseColor("#999999"))
-        }
-
-        info.addView(txtSetsPartido)
-        info.addView(txtFechaPartido)
-
-        //Badge victoria/derrota:
-        val badge = TextView(this).apply {
-            text = resultado
-            textSize = 12f
-            setPadding(12, 6, 12, 6)
-            setTextColor(if (resultado == "Victoria") Color.parseColor("#2ECC71") else Color.parseColor("#E74C3C"))
-            background = if (resultado == "Victoria")
-                getDrawable(android.R.drawable.btn_default) else getDrawable(android.R.drawable.btn_default)
-        }
-
-        fila.addView(icono)
-        fila.addView(info)
-        fila.addView(badge)
         listaPartidos.addView(fila)
     }
 
-    //Partidos por día:
+    //Partidos jugados por día:
     private fun cargarPartidosPorDia() {
         FirebaseManager.getPartidosPorDia { diasMap ->
             runOnUiThread {
@@ -243,7 +228,7 @@ class EstadisticasActivity : AppCompatActivity() {
         }
     }
 
-    //Partidos por mes:
+    //Partidos jugados distribuidos por mes:
     private fun cargarPartidosPorMes() {
         FirebaseManager.getPartidosPorMes { mesesMap ->
             runOnUiThread {
@@ -269,6 +254,7 @@ class EstadisticasActivity : AppCompatActivity() {
             description.isEnabled = false
             legend.isEnabled = false
             setDrawGridBackground(false)
+            setDoubleTapToZoomEnabled(false)
             xAxis.apply {
                 valueFormatter = IndexAxisValueFormatter(labels)
                 position = XAxis.XAxisPosition.BOTTOM
@@ -288,7 +274,7 @@ class EstadisticasActivity : AppCompatActivity() {
             setTileSource(TileSourceFactory.MAPNIK)
             setMultiTouchControls(true)
             controller.setZoom(6.0)
-            controller.setCenter(GeoPoint(40.4168, -3.7038)) // España por defecto
+            controller.setCenter(GeoPoint(41.58539967291195, 1.5441157996530586)) //Mapa de Cataluña por defecto
         }
     }
 

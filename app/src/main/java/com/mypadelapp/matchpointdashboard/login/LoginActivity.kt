@@ -37,8 +37,8 @@ class LoginActivity : AppCompatActivity() {
             }
 
             FirebaseManager.login(email, password,
-                onExito = { estadisticas() },
-                onError = { txtError.text = it }
+                onExito = {estadisticas()},
+                onError = {txtError.text = "Usurio no encontrado"}
             )
         }
 

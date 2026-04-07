@@ -8,29 +8,65 @@
     android:background="#558ed4"
     android:padding="24dp">
 
-    <!-- Título -->
+    <!--Título:-->
     <TextView
         android:id="@+id/txtTitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Crear cuenta"
         android:textColor="#bde813"
-        android:textSize="20sp"
+        android:textSize="27sp"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="64dp"/>
+        android:layout_marginTop="55dp"/>
 
-    <!-- Email -->
+    <!--Nombre:-->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutNombre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nombre"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:layout_constraintTop_toBottomOf="@id/txtTitulo"
+        android:layout_marginTop="45dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etNombre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:textColor="#ffffff"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!--Apellido:-->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutApellido"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Apellido"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:layout_constraintTop_toBottomOf="@id/layoutNombre"
+        android:layout_marginTop="16dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etApellido"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:textColor="#ffffff"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!--Correo Electronico:-->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/layoutEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Email"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        app:layout_constraintTop_toBottomOf="@id/txtTitulo"
-        android:layout_marginTop="48dp">
+        app:layout_constraintTop_toBottomOf="@id/layoutApellido"
+        android:layout_marginTop="16dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etEmail"
@@ -40,7 +76,7 @@
             android:textColor="#ffffff"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Contraseña -->
+    <!--Contraseña:-->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/layoutPassword"
         android:layout_width="match_parent"
@@ -59,7 +95,7 @@
             android:textColor="#ffffff"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Confirmar Contraseña -->
+    <!--Confirmar Contraseña:-->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/layoutPasswordConfirm"
         android:layout_width="match_parent"
@@ -78,14 +114,12 @@
             android:textColor="#ffffff"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Botón Registro -->
-
-    <!-- Volver al Login -->
+    <!--Botón de registro:-->
     <Button
         android:id="@+id/btnRegistrar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="172dp"
+        android:layout_marginTop="55dp"
         android:backgroundTint="#bde813"
         android:text="Crear cuenta"
         android:textColor="#000000"
@@ -93,6 +127,7 @@
         app:layout_constraintTop_toBottomOf="@id/layoutPasswordConfirm"
         tools:layout_editor_absoluteX="50dp" />
 
+    <!--Volver al Login:-->
     <TextView
         android:id="@+id/txtLogin"
         android:layout_width="wrap_content"
@@ -105,7 +140,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"/>
 
-    <!-- Mensaje de error -->
+    <!--Mensaje de error:-->
     <TextView
         android:id="@+id/txtError"
         android:layout_width="wrap_content"

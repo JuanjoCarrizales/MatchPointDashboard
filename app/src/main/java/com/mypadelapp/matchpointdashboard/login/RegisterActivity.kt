@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.mypadelapp.matchpointdashboard.R
 import com.mypadelapp.matchpointdashboard.firebase.FirebaseManager
-import com.mypadelapp.matchpointdashboard.estadisticas.EstadisticasActivity
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -16,6 +15,8 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
+        val etNombre = findViewById<TextInputEditText>(R.id.etNombre)
+        val etApellido = findViewById<TextInputEditText>(R.id.etApellido)
         val etEmail = findViewById<TextInputEditText>(R.id.etEmail)
         val etPassword = findViewById<TextInputEditText>(R.id.etPassword)
         val etPasswordConfirm = findViewById<TextInputEditText>(R.id.etPasswordConfirm)
@@ -24,6 +25,8 @@ class RegisterActivity : AppCompatActivity() {
         val txtLogin = findViewById<TextView>(R.id.txtLogin)
 
         btnRegistrar.setOnClickListener {
+            val nombre = etNombre.text.toString().trim()
+            val apellido = etApellido.text.toString().trim()
             val email = etEmail.text.toString().trim()
             val password = etPassword.text.toString().trim()
             val confirm = etPasswordConfirm.text.toString().trim()
@@ -32,17 +35,20 @@ class RegisterActivity : AppCompatActivity() {
             when {
                 email.isEmpty() || password.isEmpty() || confirm.isEmpty() ->
                     txtError.text = "Rellena todos los campos"
+                nombre.isEmpty() || apellido.isEmpty() ->
+                    txtError.text = "Introduce tu nombre"
                 password != confirm ->
                     txtError.text = "Las contraseñas no coinciden"
                 password.length < 6 ->
                     txtError.text = "La contraseña debe tener al menos 6 caracteres"
                 else -> {
-                    FirebaseManager.registrar(email, password,
+                    FirebaseManager.registrar(email, password, nombre, apellido,
                         onExito = {
-                            startActivity(Intent(this, EstadisticasActivity::class.java))
+                            FirebaseManager.logout()
+                            startActivity(Intent(this, LoginActivity::class.java))
                             finish()
                         },
-                        onError = { txtError.text = it }
+                        onError = {txtError.text = it}
                     )
                 }
             }

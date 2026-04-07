@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5">
+    android:background="#558ed4">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,12 +11,13 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Cabecera con saludo y cerrar sesión -->
+        <!--Cabecera con saludo y cierre de sesión:-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
+            android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp">
 
             <LinearLayout
@@ -29,18 +30,30 @@
                     android:id="@+id/txtSaludo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Hola, jugador"
-                    android:textColor="#1a1a1a"
+                    android:text="Hola:"
+                    android:textColor="#bde813"
                     android:textSize="22sp"
                     android:textStyle="bold"/>
 
                 <TextView
-                    android:id="@+id/txtEmail"
+                    android:id="@+id/txtNombre"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
                     android:textColor="#aaaaaa"
                     android:textSize="13sp"/>
+
+                <!--BORRAR!!!!!!!-->
+                <Button
+                    android:id="@+id/btnGenerar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Generar datos de prueba"
+                    android:backgroundTint="#555555"
+                    android:textColor="#ffffff"
+                    android:layout_marginTop="16dp"/>
+                <!--BORRAR!!!!!!!-->
+
             </LinearLayout>
 
             <TextView
@@ -49,12 +62,12 @@
                 android:layout_height="wrap_content"
                 android:text="Cerrar sesión"
                 android:textColor="#E74C3C"
+                android:background="@drawable/cerrar_sesion"
                 android:textSize="13sp"
                 android:padding="8dp"/>
-
         </LinearLayout>
 
-        <!-- Tarjeta: Partidos Ganados/Perdidos -->
+        <!--1r Box: Partidos Jugados:-->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -72,7 +85,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Partidos Ganados / Perdidos"
+                    android:text="Partidos Jugados"
                     android:textStyle="bold"
                     android:textSize="16sp"
                     android:textColor="#1a1a1a"
@@ -84,13 +97,12 @@
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
 
-                    <!-- Gráfico donut -->
+                    <!--Gráfico en forma de donut:-->
                     <com.github.mikephil.charting.charts.PieChart
                         android:id="@+id/pieChart"
                         android:layout_width="120dp"
                         android:layout_height="120dp"/>
 
-                    <!-- Leyenda -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_weight="1"
@@ -98,7 +110,7 @@
                         android:orientation="vertical"
                         android:layout_marginStart="16dp">
 
-                        <!-- Ganados -->
+                        <!--Partidos ganados:-->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -109,18 +121,18 @@
                             <View
                                 android:layout_width="10dp"
                                 android:layout_height="10dp"
-                                android:background="#2ECC71"
+                                android:background="@drawable/circulo_verde"
                                 android:layout_marginEnd="8dp"/>
 
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_weight="1"
                                 android:layout_height="wrap_content"
-                                android:text="Ganados"
+                                android:text="Victorias"
                                 android:textColor="#666666"/>
 
                             <TextView
-                                android:id="@+id/txtGanados"
+                                android:id="@+id/txtVictorias"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0 (0%)"
@@ -128,9 +140,9 @@
                                 android:textStyle="bold"/>
                         </LinearLayout>
 
-                        <!-- Barra ganados -->
+                        <!--Barra de victorias:-->
                         <ProgressBar
-                            android:id="@+id/barraGanados"
+                            android:id="@+id/barraVictorias"
                             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                             android:layout_width="match_parent"
                             android:layout_height="6dp"
@@ -138,7 +150,7 @@
                             android:progress="0"
                             android:layout_marginBottom="12dp"/>
 
-                        <!-- Perdidos -->
+                        <!--Partidos perdidos:-->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -149,18 +161,18 @@
                             <View
                                 android:layout_width="10dp"
                                 android:layout_height="10dp"
-                                android:background="#E74C3C"
+                                android:background="@drawable/circulo_rojo"
                                 android:layout_marginEnd="8dp"/>
 
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_weight="1"
                                 android:layout_height="wrap_content"
-                                android:text="Perdidos"
+                                android:text="Derrotas"
                                 android:textColor="#666666"/>
 
                             <TextView
-                                android:id="@+id/txtPerdidos"
+                                android:id="@+id/txtDerrotas"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0 (0%)"
@@ -168,9 +180,9 @@
                                 android:textStyle="bold"/>
                         </LinearLayout>
 
-                        <!-- Barra perdidos -->
+                        <!--Barra de derrotas:-->
                         <ProgressBar
-                            android:id="@+id/barraPerdidos"
+                            android:id="@+id/barraDerrotas"
                             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                             android:layout_width="match_parent"
                             android:layout_height="6dp"
@@ -181,14 +193,14 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Tarjetas KPI: Sets, Duración media, Media por punto -->
+        <!--2n box: Sets, Duración media y media por punto:-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginBottom="12dp">
 
-            <!-- Sets -->
+            <!--Sets:-->
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -208,7 +220,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Sets"
-                        android:textColor="#666666"
+                        android:textColor="#5B5B5B"
                         android:textSize="12sp"/>
 
                     <TextView
@@ -224,13 +236,13 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Ganados / Perdidos"
+                        android:text="Ganados/Perdidos"
                         android:textColor="#999999"
                         android:textSize="10sp"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Duración media -->
+            <!--Duración media de los partidos:-->
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -273,7 +285,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Media por punto -->
+            <!--Duración media por punto:-->
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -292,7 +304,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Media por punto"
+                        android:text="Duración media"
                         android:textColor="#666666"
                         android:textSize="12sp"/>
 
@@ -309,14 +321,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Segundos"
+                        android:text="Por punto"
                         android:textColor="#999999"
                         android:textSize="10sp"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>
 
-        <!-- Últimos partidos -->
+        <!--3r box: Resultados últimos partidos jugados:-->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -334,7 +346,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Últimos Partidos"
+                    android:text="Últimos resultados"
                     android:textStyle="bold"
                     android:textSize="16sp"
                     android:textColor="#1a1a1a"
@@ -348,7 +360,7 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Días que más juegas -->
+        <!--4t box: Días que más juegas:-->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -379,7 +391,7 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Meses que más juegas -->
+        <!--5t box: Meses que más juegas:-->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -410,7 +422,7 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Mapa -->
+        <!--6o box: Ubicación con mapa:-->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -428,7 +440,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Dónde has jugado"
+                    android:text="Sitios visitados"
                     android:textStyle="bold"
                     android:textSize="16sp"
                     android:textColor="#1a1a1a"
