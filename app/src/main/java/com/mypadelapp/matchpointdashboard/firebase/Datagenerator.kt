@@ -27,9 +27,9 @@ object DataGenerator {
                 Random.nextInt(0, 59)
             )
 
-            val ganador    = Random.nextInt(1, 3) // 1 o 2
-            val duracion   = Random.nextInt(1800, 7200) // 30min - 2h
-            val diaSemana  = cal.get(Calendar.DAY_OF_WEEK)
+            val ganador = Random.nextInt(1, 3) // 1 o 2
+            val duracion = Random.nextInt(1800, 7200) // 30min - 2h
+            val diaSemana = cal.get(Calendar.DAY_OF_WEEK)
             val horaInicio = cal.get(Calendar.HOUR_OF_DAY)
             val minutoInicio = cal.get(Calendar.MINUTE)
 
@@ -44,15 +44,15 @@ object DataGenerator {
             ).random()
 
             val partido = hashMapOf(
-                "fecha_inicio"   to fechaInicio,
-                "fecha_fin"      to fechaInicio,
+                "fecha_inicio" to fechaInicio,
+                "fecha_fin" to fechaInicio,
                 "duracion_total" to duracion,
-                "ganador"        to ganador,
-                "dia_semana"     to diaSemana,
-                "hora_inicio"    to horaInicio,
-                "minuto_inicio"  to minutoInicio,
-                "latitud"        to ubicaciones.first,
-                "longitud"       to ubicaciones.second
+                "ganador" to ganador,
+                "dia_semana" to diaSemana,
+                "hora_inicio" to horaInicio,
+                "minuto_inicio" to minutoInicio,
+                "latitud" to ubicaciones.first,
+                "longitud" to ubicaciones.second
             )
 
             db.collection("usuarios").document(uid)
@@ -175,30 +175,30 @@ object DataGenerator {
                     if (juegosP1 > juegosP2) setsP1++ else setsP2++
                     //Guardamos el último punto del juego ANTES de actualizar juegos:
                     val puntoFinal = hashMapOf(
-                        "timestamp"       to timestamp + 1,
+                        "timestamp" to timestamp + 1,
                         "pareja_ganadora" to ganadorJuego,
-                        "puntos_pareja1"  to 0,
-                        "puntos_pareja2"  to 0,
-                        "juegos_pareja1"  to 0,
-                        "juegos_pareja2"  to 0,
-                        "sets_pareja1"    to setsP1,
-                        "sets_pareja2"    to setsP2,
-                        "tiebreak"        to false
+                        "puntos_pareja1" to 0,
+                        "puntos_pareja2" to 0,
+                        "juegos_pareja1" to 0,
+                        "juegos_pareja2" to 0,
+                        "sets_pareja1" to setsP1,
+                        "sets_pareja2" to setsP2,
+                        "tiebreak" to false
                     )
                     db.collection("usuarios").document(uid)
                         .collection("partidos").document(idPartido)
                         .collection("puntos").add(puntoFinal)
                 } else {
                     val punto = hashMapOf(
-                        "timestamp"       to timestamp,
+                        "timestamp" to timestamp,
                         "pareja_ganadora" to ganadorJuego,
-                        "puntos_pareja1"  to minOf(puntosP1, 3),
-                        "puntos_pareja2"  to minOf(puntosP2, 3),
-                        "juegos_pareja1"  to juegosP1,  // ← ya incrementados
-                        "juegos_pareja2"  to juegosP2,
-                        "sets_pareja1"    to setsP1,
-                        "sets_pareja2"    to setsP2,
-                        "tiebreak"        to false
+                        "puntos_pareja1" to minOf(puntosP1, 3),
+                        "puntos_pareja2" to minOf(puntosP2, 3),
+                        "juegos_pareja1" to juegosP1,
+                        "juegos_pareja2" to juegosP2,
+                        "sets_pareja1" to setsP1,
+                        "sets_pareja2" to setsP2,
+                        "tiebreak" to false
                     )
                     db.collection("usuarios").document(uid)
                         .collection("partidos").document(idPartido)

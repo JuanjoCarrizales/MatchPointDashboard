@@ -239,7 +239,7 @@ class EstadisticasActivity : AppCompatActivity() {
                     val key = mesesMap.keys.firstOrNull { it.endsWith("-%02d".format(mes)) }
                     BarEntry(mes.toFloat() - 1, (key?.let { mesesMap[it] } ?: 0).toFloat())
                 }
-                configurarBarChart(chartMeses, entries, meses, Color.parseColor("#F39C12"))
+                configurarBarChart(chartMeses, entries, meses, Color.parseColor("#1A2E45"))
             }
         }
     }
