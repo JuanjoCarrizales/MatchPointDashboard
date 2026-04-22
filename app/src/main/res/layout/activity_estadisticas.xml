@@ -279,7 +279,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Por partido"
+                        android:text="min. por partido"
                         android:textColor="#999999"
                         android:textSize="10sp"/>
                 </LinearLayout>

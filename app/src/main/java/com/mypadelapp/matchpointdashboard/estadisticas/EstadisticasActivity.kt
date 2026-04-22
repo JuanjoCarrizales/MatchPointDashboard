@@ -157,7 +157,7 @@ class EstadisticasActivity : AppCompatActivity() {
             runOnUiThread {
                 val min = duracion / 60
                 val seg = duracion % 60
-                txtDuracionMedia.text = if (duracion > 0) "${"%02d:%02d".format(min, seg)}min" else "—"
+                txtDuracionMedia.text = if (duracion > 0) "${"%02d:%02d".format(min, seg)}" else "—"
             }
         }
     }
@@ -283,7 +283,7 @@ class EstadisticasActivity : AppCompatActivity() {
             setTileSource(TileSourceFactory.MAPNIK)
             setMultiTouchControls(true)
             controller.setZoom(6.0)
-            controller.setCenter(GeoPoint(41.58539967291195, 1.5441157996530586)) //Mapa de Cataluña por defecto
+            controller.setCenter(GeoPoint(41.58539967291195, 1.5441157996530586))//Mapa de Cataluña por defecto
         }
     }
 
